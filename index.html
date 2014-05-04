@@ -36,6 +36,23 @@
       <p><a href="preview.php">Download Videos and Images</a></p>
       <h2>Settings</h2>
       <table border=1 width=650>
+        <tr>
+          <td>Resolutions:</td>
+          <td>
+            Load Preset: <select onclick="set_preset(this.value)">
+              <option value="1920 1080 25 25 2592 1944">Select option...</option>
+              <option value="1920 1080 25 25 2592 1944">Std FOV</option>
+              <option value="1296 0730 25 25 2592 1944">16:9 wide FOV</option>
+              <option value="1296 0976 25 25 2592 1944">4:3 full FOV</option>
+              <option value="1920 1080 01 30 2592 1944">Std FOV, x30 Timelapse</option>
+            </select><br>
+            Custom Values:<br>
+            Video res: <input type="text" size=4 id="video_width">x<input type="text" size=4 id="video_height">px<br>
+            Video fps: <input type="text" size=2 id="video_fps">recording, <input type="text" size=2 id="MP4Box_fps">boxing<br>
+            Image res: <input type="text" size=4 id="image_width">x<input type="text" size=4 id="image_height">px<br>
+            <input type="button" value="OK" onclick="set_res();">
+          </td>
+        </tr>
         
         <tr>
           <td>Timelapse-Interval (0.1...3200):</td>
