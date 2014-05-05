@@ -48,22 +48,11 @@ while (True):
   if line_array[0] == "servo":
     if currentTilt + int(line_array[2]) < YservoDown  and currentTilt + int(line_array[2]) > YservoUp:
       if currentPan + int(line_array[1]) < XservoLeft and currentPan + int(line_array[1]) > XservoRight:
-        prevTilt = currentTilt
-        prevPan = currentPan
         currentTilt += int(line_array[2])
         currentPan += int(line_array[1])
-        for y in range(0, abs(currentTilt - prevTilt)):
-          if(currentTilt - prevTilt < 0):
-            pwm.setPWM(YservoPin, 0, currentTilt -  y)
-          else:    
-            pwm.setPWM(YservoPin, 0, currentTilt + y)
-          time.sleep(0.015)
-        for x in range(0, abs(currentPan - prevPan)):
-          if(currentPan - prevPan < 0):
-            pwm.setPWM(XservoPin, 0, currentPan - x)
-          else:
-            pwm.setPWM(XservoPin, 0, currentPan + x)
-          time.sleep(0.015)
+        pwm.setPWM(YservoPin, 0, currentTilt + y)
+        pwm.setPWM(XservoPin, 0, currentPan + x)
+          
          
   elif line_array[0] == "led":
     p_led.createPiLight(int(line_array[1]),int(line_array[2]),int(line_array[3]))
