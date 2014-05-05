@@ -22,7 +22,7 @@
         <input type="button" value="down" onclick="servo_down();"><br><br>
         <input type="button" value="pan" onclick="servo_pan();">
         <input type="button" value="tilt" onclick="servo_tilt();"><br><br>
-        Step angle : 10<input type="range" step="10" value="10" id="step"  name="step" min="10" max="100" onchange="showValue(this.value)" />100
+        Step angle : 10<input type="range" step="10" value="10" id="step"  name="step" min="10" max="100" onchange="showValue(this.value)" >100
   <br /> Current value: <span id="stepValue">10</span><br />
   <script type="text/javascript">
   function showValue(newValue)
@@ -32,7 +32,7 @@
   </script>
   <br><br>
   Speed : 1<input type ="range" id="speed" name="speed" step="1" min="1" max="10" value="5">10
-  <p class="note">Current value: <spane id="speedValue">0</span><br>
+  <p class="note">Current value: <spane id="speedValue">0</span></p><br>
 
         <!--<tr>
           <td>Pi-Light:</td>
