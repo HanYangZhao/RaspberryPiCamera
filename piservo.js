@@ -8,9 +8,9 @@ var rightPan = 160;
 var upTilt = 102;
 var led_stat = false;
 var ajax_pipan;
+var step = document.getElementById('step').value
+var speed = document.getElementById('speed').value
  
-//document.onkeypress = pipan_onkeypress;
-document.addEventListener("keydown", keyDown, false);
  
 if(window.XMLHttpRequest) {
   ajax_pipan = new XMLHttpRequest();
@@ -28,25 +28,25 @@ function pipan_servo () {
 }
  
 function servo_left () {
-  pan = 10;
+  pan = document.getElementById('step').value;
   tilt = 0;
   pipan_servo();
 }
  
 function servo_right () {
-  pan = -10;
+  pan = -document.getElementById('step').value;
   tilt = 0;
   pipan_servo();
 }
  
 function servo_up () {
-  tilt = -10;
+  tilt = -document.getElementById('step').value;
   pan = 0;
   pipan_servo();
 }
  
 function servo_down () {
-  tilt = 10;
+  tilt = document.getElementById('step').value;
   pan = 0;
   pipan_servo();
 }
