@@ -28,15 +28,13 @@
     if(!(is_numeric($_GET["pan"]))) {
       if(is_numeric($_GET["tilt"])) {
         $pan = 0;
-        $tilt = 0;
+  $tilt = $_GET["tilt"];
         $pipe = fopen("FIFO_piservo","w");
         fwrite($pipe, "panning $pan $tilt ");
         fclose($pipe);
-      }	
+      } 
     }
   } 
-
-
 
 
   if(isset($_GET["pan"])) {
@@ -51,6 +49,17 @@
     }
   }
 
+  if(isset($_GET["pan"])) { 
+    if(is_numeric($_GET["pan"])) {
+      if(!(is_numeric($_GET["tilt"]))) {
+        $tilt = 0;
+  $pan = $_GET["pan"];
+  $pipe = fopen("FIFO_piservo","w");
+  fwrite($pipe, "tilting $pan $tilt ");
+  fclose($pipe);
+     }
+   }
+ }
  
 //  if(isset($_GET["red"])) {
 //    if(is_numeric($_GET["red"])) {
