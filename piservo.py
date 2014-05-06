@@ -12,9 +12,8 @@ import time
 pwm = PWM(0x40, debug=True)
 
 
-XservoPin = 0
-YservoPin = 1 
-XservoRight = 180 # Min pulse length out of 4096
+
+XservoRight = 160 # Min pulse length out of 4096
 XservoMid = 340
 XservoLeft = 512  # Max pulse length out of 4096
 YservoUp = 102
@@ -32,8 +31,8 @@ def setServoPulse(channel, pulse):
   pwm.setPWM(channel, 0, pulse)
 
 pwm.setPWMFreq(50)                        # Set frequency to 50 Hz
-pwm.setPWM(XservoPin, 0, XservoMid)               # PWM 0 is the pan
-pwm.setPWM(YservoPin, 0, YservoMid)               # PWM 1 is the tilt
+pwm.setPWM(0, 0, XservoMid)               # PWM 0 is the pan
+pwm.setPWM(1, 0, YservoMid)               # PWM 1 is the tilt
 time.sleep(1)
 currentTilt = YservoMid 
 currentPan = XservoMid
@@ -50,9 +49,18 @@ while (True):
       if currentPan + int(line_array[1]) < XservoLeft and currentPan + int(line_array[1]) > XservoRight:
         currentTilt += int(line_array[2])
         currentPan += int(line_array[1])
+<<<<<<< HEAD
         pwm.setPWM(YservoPin, 0, currentTilt + y)
         pwm.setPWM(XservoPin, 0, currentPan + x)
           
+=======
+        # log.write(currentTilt)
+        # log.wrtie("\n")
+        pwm.setPWM(1, 0, currentTilt)
+        # log.write(currentPan)
+        # log.write("\n")
+        pwm.setPWM(0, 0, currentPan)
+>>>>>>> parent of 7948173... new version with loop for smooter movments
          
   elif line_array[0] == "led":
     p_led.createPiLight(int(line_array[1]),int(line_array[2]),int(line_array[3]))
@@ -60,22 +68,18 @@ while (True):
 
   elif line_array[0] == "panning":
     print("panning")
-    pwm.setPWM(XservoPin, 0, XservoLeft)               # PWM 0 is the pan
+    pwm.setPWM(0, 0, XservoLeft)               # PWM 0 is the pan
     time.sleep(1)
     currentPan = XservoLeft
     while (currentPan > 160):
-      currentPan -= 1 
-      pwm.setPWM(XservoPin, 0, currentPan)
-      time.sleep(.0225)
-    time.sleep(1)
-    pwm.setPWM(XservoPin, 0, XservoMid)
+      currentPan -= 5
+      pwm.setPWM(0, 0, currentPan)
+      time.sleep(.2)
+    pwm.setPWM(0, 0, XservoMid)
     currentPan = XservoMid
 
   elif line_array[0] == "centering":
-    pwm.setPWM(YservoPin, 0, YservoMid)               # PWM 1 is the tilt
-    time.sleep(0.3)
-    pwm.setPWM(XservoPin, 0, XservoMid)               # PWM 0 is the pan
-    currentPan = XservoMid
-    currentTilt = YservoMid
+    pwm.setPWM(1, 0, YservoMid)               # PWM 1 is the tilt
+    pwm.setPWM(0, 0, XservoMid)               # PWM 0 is the pan
     time.sleep(1)
   pipein.close()
