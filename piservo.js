@@ -66,24 +66,32 @@ function servo_down () {
 } */
 
 function servo_pan () {
+  //tilt = 0;
+  pan = 0;
+  tilt = document.getElementById('speedValue').innerHTML;
+  ajax_pipan.open("GET","piservo.php?pan=" + "panning"  + "&tilt=" + tilt, true);
+  ajax_pipan.send();
+}
 
-ajax_pipan.open("GET","piservo.php?pan=" + "panning" + "&tilt=" + tilt, true);
+function servo_center () {
+
+  ajax_pipan.open("GET","piservo.php?pan=" + "centering" + "&tilt=" + "centering", true);
   //open(method,url,async)
   ajax_pipan.send();
 
 }
 
-function servo_center () {
-
-ajax_pipan.open("GET","piservo.php?pan=" + "centering" + "&tilt=" + "centering", true);
-  //open(method,url,async)
+function servo_tilt () {
+  pan = document.getElementById('speedValue').innerHTML;
+  //pan = 0;
+  ajax_pipan.open("GET","piservo.php?pan=" + pan + "&tilt=" + "tilting", true);
   ajax_pipan.send();
 
 }
 
 function keyDown (e) {
  
-  if(e.keyCode == 97) servo_left();
+  if(e.keyCode == 97) servo_left().innerHTML;
   else if(e.keyCode == 119) servo_up();
   else if(e.keyCode == 100) servo_right();
   else if(e.keyCode == 115) servo_down();
@@ -91,3 +99,4 @@ function keyDown (e) {
   //else if(e.keyCode == 102) led_switch();
  
 }
+
