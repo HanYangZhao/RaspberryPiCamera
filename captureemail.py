@@ -8,11 +8,16 @@ from email.MIMEText import MIMEText
 from email import Encoders
 import datetime
 import os
+import base64
 import logging
 
 filename = sys.argv[1]
 recipients_option = sys.argv[2]
 cc = ""
+
+with open('/usr/local/gmail', 'r') as f:
+	gmail_pwd = f.read()
+f.closed
 
 if recipients_option == "a":
 	recipients = ['bobthesheep22@gmail.com ', 'dc_cn@yahoo.com']
@@ -24,7 +29,7 @@ elif recipients_option == "z":
 	recipients = "dc_cn@yahoo.com"
 
 gmail_user = "bobthesheep22@gmail.com"
-gmail_pwd = "u2421mathm50"
+gmail_pwd = base64.b64decode(gmail_pwd)
 
 now = datetime.datetime.now()
 
@@ -32,7 +37,11 @@ def mail(to, subject, text, attach):
 	msg = MIMEMultipart()
 
 	msg['From'] = gmail_user
-	msg['To'] = ", ". join(recipients) 
+
+	if recipients_option == "a":
+		msg['To'] = ", ". join(recipients) 
+	elif recipients_option == "r":
+		msg['To'] = recipients
 	msg['Cc'] = cc
 	msg['Subject'] = subject
 
