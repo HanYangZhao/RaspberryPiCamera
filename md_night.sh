@@ -15,14 +15,11 @@ sudo raspistill -q 75 -ex night -hf -vf -awb incandescent -ev 10 -w 1296 -h 976 
 
 echo "ru 1" > /var/www/FIFO 
 
-sleep 7
-echo "camera re-enabled"
+sleep 10
+
 echo "md 1" > /var/www/FIFO
 
 python /home/pi/bin/motion/emaildirectory.py -d /home/pi/sambashare/MotionCapture/$NOW/ -s bobthesheep22@gmail.com -r bobthesheep22@gmail.com
-
-echo "email sent"
-
 
 
 #IF the second argument is empty, send email to other people
