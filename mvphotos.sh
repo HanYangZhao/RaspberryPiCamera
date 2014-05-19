@@ -5,11 +5,11 @@ if [ ! -d "$(grep //192.168.2.209/PiCamera /home/pi/sambashare)" ]; then
 	sleep 30
 fi
 
-sudo mkdir -p /home/pi/sambashare/`date -d yesterday '+%d%m%y'`
+sudo mkdir -p /home/pi/sambashare/`date -d yesterday '+%d%m%y'`/
 
 cd /var/www/media   
 
-for f in *.*
+for f in *
 do 
-   sudo mv -v  $f  /home/pi/sambashare/`date -d yesterday '+%d%m%y'`
+   sudo mv -v  $f  /home/pi/sambashare/`date -d yesterday '+%d%m%y'`/
 done

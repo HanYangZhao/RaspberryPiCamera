@@ -13,7 +13,6 @@ import subprocess
 # bmp = PWM(0x40, debug=True)
 pwm = PWM(0x40, debug=True)
 
-#You'll have to calibrate this for you own servos
 
 XservoPin = 0
 YservoPin = 1
@@ -23,13 +22,10 @@ XservoLeft = 512  # Max pulse length out of 4096
 YservoUp = 102
 YservoMid = 320
 YservoDown = 440
-
-#Tells the motion detect to stop or start
 mdStop = 'echo "md 0" > /var/www/FIFO'
 mdStart = 'echo "md 1" > /var/www/FIFO'
 md = 0
 
-# Not used
 def setServoPulse(channel, pulse):
   pulseLength = 1000000                   # 1,000,000 us per second
   pulseLength /= 50                       # 60 Hz
@@ -40,19 +36,34 @@ def setServoPulse(channel, pulse):
   pulse /= pulseLength
   pwm.setPWM(channel, 0, pulse)
 
-
-pwm.setPWMFreq(50)                        # Set frequency to 50 Hz or 0.2us
+pwm.setPWMFreq(50)                        # Set frequency to 50 Hz
 pwm.setPWM(XservoPin, 0, XservoMid)               # PWM 0 is the pan
 pwm.setPWM(YservoPin, 0, YservoMid)               # PWM 1 is the tilt
 time.sleep(1)
 currentTilt = YservoMid
 currentPan = XservoMid
+#log = open("/home/pi/bin/servo/log", 'w')
 while (True):
 
+  pipecmd = open("/var/www/FIFO", 'r')
   pipein = open("/var/www/FIFO_piservo", 'r')
+  
+
+ # log.write("opened")
+ # log.write("\n")
+  cmd = pipecmd.readline()
   line = pipein.readline()
+  
   line_array = line.split(' ')
-  #Reads from the FIFO_piservo file
+  cmd_array = cmd.split(' ')
+  print(cmd)
+  
+  if cmd_array[0] == "md 0":
+    md = 0
+    print("md == 0")
+  elif cmd_array[0] == "md 1":
+    md = 1
+    print("md == 1")
   if line_array[0] == "servo":
     print(line_array[1])
     print(line_array[2])
@@ -60,12 +71,13 @@ while (True):
       if currentPan + int(line_array[1]) < XservoLeft and currentPan + int(line_array[1]) > XservoRight:
         currentTilt += int(line_array[2])
         currentPan += int(line_array[1])
-        #Stops Motion Detection
         subprocess.Popen(mdStop, shell = True)
         time.sleep(0.05)
         pwm.setPWM(YservoPin, 0, currentTilt)
         pwm.setPWM(XservoPin, 0, currentPan)
-
+        time.sleep(0.05)
+        if (md == 1):
+          subprocess.Popen(mdStart, shell = True)
   elif line_array[0] == "led":
     p_led.createPiLight(int(line_array[1]),int(line_array[2]),int(line_array[3]))
 
@@ -73,17 +85,24 @@ while (True):
   elif line_array[0] == "panning":
     subprocess.Popen(mdStop, shell = True)
     time.sleep(0.5)
+    #print("panning")
+    #print(line_array[1])
+    #print(line_array[2])
     pwm.setPWM(XservoPin, 0, XservoLeft)               # PWM 0 is the pan
     time.sleep(1)
     currentPan = XservoLeft
     while (currentPan > 160):
       currentPan -= 1
+      #print(line_array[2])
       pwm.setPWM(XservoPin, 0, currentPan)
       time.sleep(.0225 * float(line_array[2]))
     time.sleep(1)
     pwm.setPWM(XservoPin, 0, XservoMid)
     currentPan = XservoMid 
-    
+    if (md == 1):
+      time.sleep(0.5)
+      subprocess.Popen(mdStart, shell = True)
+
   elif line_array[0] == "tilting":
     subprocess.Popen(mdStop, shell = True)
     time.sleep(0.5)
@@ -97,7 +116,9 @@ while (True):
     time.sleep(1)
     pwm.setPWM(YservoPin, 0, YservoMid)
     currentTilt = YservoMid
-    
+    if (md == 1):
+      time.sleep(0.5)
+      subprocess.Popen(mdStart, shell = True)
 
   elif line_array[0] == "centering":
     print("centering")
@@ -109,6 +130,7 @@ while (True):
     currentPan = XservoMid
     currentTilt = YservoMid
     time.sleep(1)
-     
-
+    if (md == 1):
+      time.sleep(0.5)
+      subprocess.Popen(mdStart, shell = True)
   pipein.close()

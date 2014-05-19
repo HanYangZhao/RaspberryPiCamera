@@ -12,6 +12,8 @@
   //
   // code
   //
+
+  //If pan is a number and tilt is a number then move the servo according to the angle
   if(isset($_GET["pan"])) {
     if(is_numeric($_GET["pan"])) {
       if(is_numeric($_GET["tilt"])) {
@@ -23,7 +25,7 @@
       }
     }
   }
- 
+  //If pan is not a number and tilt is a number, then we are panning. tilt contains the speed of panning
   if(isset($_GET["pan"])) {
     if(!(is_numeric($_GET["pan"]))) {
       if(is_numeric($_GET["tilt"])) {
@@ -36,7 +38,7 @@
     }
   } 
 
-
+  //If tilt is not a number and pan is not a number then we are re-centering the camera
   if(isset($_GET["pan"])) {
     if(!(is_numeric($_GET["pan"]))) {
       if(!(is_numeric($_GET["tilt"]))) {
@@ -49,6 +51,7 @@
     }
   }
 
+  //If tilt is not a number and pan is a number, then we a tilting, pan contains the speed of tilt
   if(isset($_GET["pan"])) { 
     if(is_numeric($_GET["pan"])) {
       if(!(is_numeric($_GET["tilt"]))) {

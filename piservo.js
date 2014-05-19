@@ -68,8 +68,8 @@ function servo_down () {
 function servo_pan () {
   //tilt = 0;
   pan = 0;
-  tilt = document.getElementById('speedValue').innerHTML;
-  ajax_pipan.open("GET","piservo.php?pan=" + "panning"  + "&tilt=" + tilt, true);
+  speed = document.getElementById('speedValue').innerHTML;
+  ajax_pipan.open("GET","piservo.php?pan=" + "panning"  + "&tilt=" + speed, true);
   ajax_pipan.send();
 }
 
@@ -82,9 +82,9 @@ function servo_center () {
 }
 
 function servo_tilt () {
-  pan = document.getElementById('speedValue').innerHTML;
+  speed = document.getElementById('speedValue').innerHTML;
   //pan = 0;
-  ajax_pipan.open("GET","piservo.php?pan=" + pan + "&tilt=" + "tilting", true);
+  ajax_pipan.open("GET","piservo.php?pan=" + speed + "&tilt=" + "tilting", true);
   ajax_pipan.send();
 
 }
