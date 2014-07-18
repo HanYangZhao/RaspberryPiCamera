@@ -1,0 +1,28 @@
+<html>
+	<head>
+		<title>RPi Monitor</title>
+		<script src="./js/jquery-2.1.1.min.js">
+		<script src="./js/json-to-table.js"></script>
+	</head>
+	<body>
+	<center>
+	    <h1>Temp/Humidity Log</h1>	
+		<script>
+			function loadTable(){
+		    	$.getJSON("./js/templog.json", function(log){
+		       		var jsonHtmlTable = ConvertJsonToTable(log, 'jsonTable', null, 'Download');
+		       		document.getElementById("templog").innerHTML=jsonHtmlTable;
+		      	});
+		    	setTimeout(loadTable,5000);
+		    }
+		$(document).ready(function(){
+			loadTable();
+		});
+		</script>
+		
+		
+
+		<div id="templog"></div>
+	</center>
+	</body>
+</html>
