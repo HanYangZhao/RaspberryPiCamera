@@ -119,7 +119,7 @@
     <script>
         $.ajaxSetup({ cache: false });
         function loadData(){
-          $.getJSON("./js/tempdata.json",function(data) {
+          $.getJSON("./weatherdata/currenttemp.json",function(data) {
               output = "Temperature: " + data.Temperature +"C" + "<br>" +  " Humidity: " + data.Humidity +"%" + " ";
             time = "Last Update " + data.Time;
             
