@@ -1,0 +1,167 @@
+<html>
+    <head>
+        <title>P Plot of logged temperature</title>
+    <meta name="description" content="Plot of temperature sensor connected to Raspberry Pi">
+       
+      
+    <script src="./js/jquery-2.1.1.min.js" type="text/javascript"></script>
+    <script src="./js/highcharts.js" type="text/javascript"></script>
+    <script src="./js/jquery.csv-0.71.min.js"></script>
+    <script src="/js/themes/gray.js"></script>    
+	
+ <script type="text/javascript">
+    function processData(input,chartnumber) {
+    	var series = {
+    		id : 'series',
+    		name  : 'AM2302',
+    		type: 'area',
+    		data : []
+    	};
+
+    	var  data_array = $.csv.toArrays(input ,{onParseValue: $.csv.hooks.castToScalar});    
+      for ( i = 0 ; i < data_array.length ; i++){
+        series.data.push([Date.UTC(data_array[i][0],data_array[i][1] - 1,data_array[i][2],data_array[i][3],
+        data_array[i][4],data_array[i][5]),data_array[i][6]]);
+      }	
+	  
+		if (chartnumber === 0){
+			chart1.addSeries(series);
+		} else if ( chartnumber === 1)
+		    chart2.addSeries(series);
+	}
+	</script>
+	
+	<script type="text/javascript">
+		
+    var chart1; // global chart variable
+	var chart2;
+    // Get data from server 
+    function getData(url,chartnumber){
+        $.get( url , function( data ) {
+          processData(data,chartnumber);
+        });
+    }   
+    </script>
+
+   
+   <script type="text/javascript">
+  // Configure the plot
+   var result;
+   $(document).ready(function() {
+
+        var options = {
+
+            chart: {
+                zoomType: 'x',
+                spaceRight: 20
+            },
+			
+            subtitle: {
+                text: 'Click and drag in the plot area to zoom in',
+                align: 'right'  
+                },
+        
+            xAxis: {
+                type: 'datetime',
+                tickPixelInterval: 150,
+                minRange: 1800000,
+                title: {
+                    text: 'Time',
+                    margin: 15
+                }},
+            yAxis: {
+                minPadding: 0.2,
+                maxPadding: 0.2,
+                showFirstLabel: false,
+                },
+
+            plotOptions: {
+                area: {
+                    fillColor: {
+                        linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1},
+                        stops: [
+                               [0, Highcharts.getOptions().colors[6]],
+                               [1, Highcharts.Color(Highcharts.getOptions().colors[6]).setOpacity(0).get('rgba')],
+                               ]
+                    },
+                    lineWidth: 1,
+		    lineColor : '#303030',
+                    marker: {
+                        enabled: false,
+                        states: {
+                                hover: {
+                                    enabled: true,
+                                    radius: 5
+                                }
+                        }
+                    },
+                    shadow: true,
+                    states: {
+                        hover: {
+                            lineWidth: 1
+                         }
+                    },
+                    threshold: null
+                }               
+            }
+        };
+            
+
+        //Set options to all charts created after this line.
+        Highcharts.setOptions(options);
+		//Temperature chart
+       chart1 = new Highcharts.Chart({
+            chart: {
+                renderTo: 'container',
+                events: {load: getData("./weatherdata/tempcycle.csv", 0)},
+				type : 'area'
+            },
+            title: {
+                text: 'Temperature'
+            },
+            yAxis: {
+              title: {
+                  text: 'Temperature \u00B0C',
+                  margin: 15
+              }
+            }
+        });
+
+        //Humidity Chart
+		chart2 = new Highcharts.Chart({
+            chart: {
+                renderTo: 'humcontainer',
+                type : 'area',
+                events: {load: getData("./weatherdata/humcycle.csv",1)}
+            },
+			
+            title: {
+               text: 'Relative Humidity'
+            },
+          
+            yAxis: {
+               title: {
+                   text: 'Humidity %',
+                   margin: 15
+                }
+            }
+        });
+	});   
+	</script>
+    
+	<style>
+		.chart {
+			height: 200px;
+		}
+
+		.spacer {
+			height: 20px;
+		}
+	</style>
+	</head>
+    <body>
+    <div id="container" class="chart" style="width: 100%; height: 400px"></div>
+	<div class="spacer"></div>
+    <div id="humcontainer"  class="chart" style="width: 100%; height: 400px"></div>
+    </body>
+</html>

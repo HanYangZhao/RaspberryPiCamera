@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>RPi Cam Download</title>
+  </head>
+  <body>
+    <p><a href="index.html">Back</a></p>
+    <?php
+      if(isset($_GET["delete"])) {
+        unlink("/home/pi/sambashare/" . $_GET["delete"]);
+      }
+      if(isset($_GET["delete_all"])) {
+        $files = scandir("/home/pi/sambashare");
+        foreach($files as $file) unlink("/home/pi/sambashare/$file");
+      }
+      else if(isset($_GET["file"])) {
+        echo "<h1>Preview</h1>";
+        if(substr($_GET["file"], -3) == "jpg") echo "<img src='/home/pi/sambashare/" . $_GET["file"] . "' width='640'>";
+        else echo "<video width='640' controls><source src='/home/pi/sambashare/" . $_GET["file"] . "' type='video/mp4'>Your browser does not support the video tag.</video>";
+        echo "<p><input type='button' value='Download' onclick='window.open(\"download.php?file=" . $_GET["file"] . "\", \"_blank\");'> ";
+        echo "<input type='button' value='Delete' onclick='window.location=\"preview.php?delete=" . $_GET["file"] . "\";'></p>";
+      }
+    ?>
+    <h1>Files</h1>
+    <?php
+      $files = scandir("/home/pi/sambashare");
+      if(count($files) == 2) echo "<p>No videos/images saved</p>";
+      else {
+        foreach($files as $file) {
+          if(($file != '.') && ($file != '..')) {
+            $fsz = round ((filesize("/home/pi/sambashare/" . $file)) / (1024 * 1024));
+            echo "<p><a href='preview.php?file=$file'>$file</a> ($fsz MB)</p>";
+          }
+        }
+        echo "<p><input type='button' value='Delete all' onclick='if(confirm(\"Delete all?\")) {window.location=\"preview.php?delete_all\";}'></p>";
+      }
+    ?>
+  </body>
+</html>
